@@ -1,0 +1,31 @@
+{
+    "theme_color": "#1407d7",
+    "background_color": "#eaf635",
+    "display": "minimal-ui",
+    "scope": "/index.html",
+    "start_url": "/index.html",
+    "name": "venda_mammae",
+    "short_name": "venda_mammae",
+    "icons": [
+        {
+            "src": "public_icon/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "public_icon/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "public_icon/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "public_icon/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
