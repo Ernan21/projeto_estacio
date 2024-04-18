@@ -23,12 +23,12 @@ public class IndexController {
         return "index";
     }
 
-    // @GetMapping("/produtos");
-    // public String produto(Model model) {
-        // List<Map<String, Object>> produto = jdbcTemplate.queryForList(
-            // "SELECT * FROM produto"); 
-        // model.addAttribute("produtos", produto);
-        // return "produtos";
-    // }
+    @GetMapping("/screen-main")
+    public String main_screen(Model model) {
+        List<Map<String, Object>> loja1 = jdbcTemplate.queryForList(
+                "SELECT * FROM lojas WHERE id=1"); 
+        model.addAttribute("loja", loja1);
+        return "screen-main";
+    }
 }
 
