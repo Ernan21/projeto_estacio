@@ -16,19 +16,29 @@ public class IndexController {
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/")
-    public String loja(Model model) {
-        List<Map<String, Object>> loja1 = jdbcTemplate.queryForList(
-                "SELECT * FROM lojas WHERE id=1"); 
-        model.addAttribute("loja", loja1);
-        return "index";
-    }
-
-    @GetMapping("/screen-main")
     public String main_screen(Model model) {
-        List<Map<String, Object>> loja1 = jdbcTemplate.queryForList(
-                "SELECT * FROM lojas WHERE id=1"); 
-        model.addAttribute("loja", loja1);
+        try {
+            List<Map<String, Object>> loja1 = jdbcTemplate.queryForList(
+                    "SELECT * FROM lojas WHERE id=1");
+            model.addAttribute("loja", loja1);
+            model.addAttribute("screen_estoque", "/screen-estoque");
+        } catch (Exception e) {
+            // Tratar a exceção aqui, como registrar ou retornar uma página de erro
+            e.printStackTrace(); // apenas para depuração, você pode substituir isso pelo tratamento adequado
+        }
         return "screen-main";
     }
-}
 
+    @GetMapping("/screen-estoque")
+    public String estoque_screen(Model model) {
+        try {
+            List<Map<String, Object>> produto = jdbcTemplate.queryForList(
+                    "SELECT * FROM produto");
+            model.addAttribute("produtos", produto);
+        } catch (Exception e) {
+            // Tratar a exceção aqui, como registrar ou retornar uma página de erro
+            e.printStackTrace(); // apenas para depuração, você pode substituir isso pelo tratamento adequado
+        }
+        return "screen-estoque";
+    }
+}
