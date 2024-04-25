@@ -59,6 +59,8 @@ public class IndexController {
         return "screen_cadastro";
     }
 
+    
+
     @GetMapping("/screen_vendas")
     public String screen_vendas(Model model) {
         try {
