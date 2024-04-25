@@ -1,43 +1,80 @@
-/* estilização de caixa de busca */
-#search{
+/* Estilização da caixa de busca */
+#search {
     display: flex;
     justify-content: center;
-    margin: 20px 0px 20px 0px;
-}
-
-#searchInput{
-    width: 80%;
-    border: solid black 1px;
-    border-radius: 5px;
-    margin: 0px 20px 0px 20px;
-}
-
-button{
-    border: solid black 1px;
-    border-radius: 5px;
-    box-shadow: 0px 5px 0px gray;
-}
-button:active{
-    border: solid black 1px;
-    border-radius: 5px;
-    background-color: skyblue;
-    box-shadow: 0px 0px 0px gray;
-}
-
-/* estilização das tabelas */
-table{
+    margin: 20px 0;
+  }
+  
+  #searchInput {
+    width: 60%;
+    padding: 10px;
+    border: 2px solid #ddd; /* Aumentei a largura da borda para dar mais destaque */
+    border-radius: 20px; /* Aumentei o raio para uma aparência mais suave */
+    margin-right: 10px;
+  }
+  
+  #searchInput:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  button {
+    padding: 10px 20px; /* Aumentei o padding para melhorar a usabilidade em dispositivos móveis */
+    border: 2px solid #007bff;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); /* Ajustei a sombra para ser mais sutil */
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button:active {
+    background-color: #0056b3;
+    box-shadow: none;
+  }
+  
+  /* Estilização das tabelas */
+  table {
     width: 100%;
-}
-
-table, thead, tbody, tr, th, td{
-    border: solid black 1px;
     border-collapse: collapse;
-}
-
-thead, th{
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Aumentei o padding para uma melhor legibilidade */
+  }
+  
+  thead {
+    background-color: #f2f2f2;
     text-align: center;
-}
-
-.estoque{
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tr:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .estoque {
     text-align: center;
-}
+  }
+  
+  /* Adições de cores */
+  body {
+    background-color: #f5f5f5;
+  }
+  
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
