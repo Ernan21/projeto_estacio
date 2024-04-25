@@ -1,49 +1,75 @@
 <!doctype html>
 <html lang="pt-br" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="icone.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link th:href="@{/css/screen-estoque/style.css}" rel="stylesheet">
     <title th:text="${loja[0].nome}"></title>
-    
-  </head>
-  <body class="d-flex alight-items-center py-5 b-body-tertiary">
-    <main class="w-100 m-auto">
+
+    <style>
+        /* Estilo personalizado para a tabela */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center py-5 b-body-tertiary">
+<main class="w-100 m-auto">
     <header>
-      <h1 style="text-align: center;">ESTOQUE</h1>
+        <h1 style="text-align: center;">ESTOQUE</h1>
     </header>
     <div id="search">
-      <input type="text" id="searchInput" placeholder="Pesquisar por nome...">
-      <button onclick="search()">Pesquisar</button>
+        <input type="text" id="searchInput" placeholder="Pesquisar por nome...">
+        <button onclick="search()">Pesquisar</button>
     </div>
     <div class="container">
-      <table id="productTable">
-        <thead>
-          <tr>
-            <th>codigo</th>
-            <th>descricao completa</th>
-            <th>estoque</th>
-          </tr>
-        </thead>
-        <tbody th:each="produtos : ${produtos}">
-          <tr>
-            <td th:text="${produtos['id']}"></td>
-            <td class="descricao_completa" th:text="${produtos['descricao_completa']}"></td>
-            <td class="estoque" th:text="${produtos['estoque']}"></td>
-          </tr>
-        </tbody>
-      </table>
+        <table id="productTable">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Estoque</th>
+            </tr>
+            </thead>
+            <tbody th:each="produto : ${produtos}">
+            <tr>
+                <td th:text="${produto['id']}"></td>
+                <td class="descricao_completa" th:text="${produto['descricao_completa']}"></td>
+                <td class="estoque" th:text="${produto['estoque']}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-  </body>
-  <script>
+</main>
+</body>
+<script>
     function search() {
         var searchTerm = document.getElementById("searchInput").value;
         var url = "/search?term=" + searchTerm; // Endpoint de pesquisa no controlador Java
 
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     // Atualize a tabela de produtos com os resultados da pesquisa
@@ -56,5 +82,5 @@
         xhr.open("GET", url, true);
         xhr.send();
     }
-  </script>
+</script>
 </html>

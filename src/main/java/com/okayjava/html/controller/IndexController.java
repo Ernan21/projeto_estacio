@@ -38,7 +38,7 @@ public class IndexController {
         try {
             List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1"); // Busca com query do banco de dados postgresql
             model.addAttribute("loja", loja1);
-            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto"); // Busca com query do banco de dados postgresql
+            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto ORDER BY id ASC"); // Busca com query do banco de dados postgresql
             model.addAttribute("produtos", produto);
         } catch (Exception e) {
             e.printStackTrace();
