@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -58,7 +59,20 @@ public class IndexController {
         }
         return "screen_cadastro";
     }
-
+    @PostMapping("/screen_cadastro")
+    public String salvarProduto(@RequestParam("descricao_completa") String descricao_completa,
+                                @RequestParam("estoque") int estoque,
+                                @RequestParam("custo_produto") float custo_produto,
+                                @RequestParam("preco_venda") float preco_venda) {
+        try {   
+            jdbcTemplate.update("INSERT INTO produto (descricao_completa, estoque, custo_produto, preco_venda) VALUES (?, ?, ?, ?)",
+                                descricao_completa, estoque, custo_produto, preco_venda);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/screen_cadastro";
+    }
+    
     
 
     @GetMapping("/screen_vendas")
