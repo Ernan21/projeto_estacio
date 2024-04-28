@@ -1,0 +1,30 @@
+.form-container{
+    max-width: 380px;
+    padding: 1rem;
+}
+h1{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+}
+
+#messageArea {
+    position: fixed;
+    top: 550px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    text-align: center; 
+}
+
+
+#messageArea.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+#messageArea.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}

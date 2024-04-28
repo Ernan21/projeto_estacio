@@ -1,5 +1,6 @@
 package com.okayjava.html.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class IndexController {
@@ -50,37 +53,59 @@ public class IndexController {
     @GetMapping("/screen_cadastro")
     public String screen_cadastro(Model model) {
         try {
-            List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1"); // Busca com query do banco de dados postgresql
+            List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1");
             model.addAttribute("loja", loja1);
-            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto"); // Busca com query do banco de dados postgresql
+            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto ORDER BY id ASC");
             model.addAttribute("produtos", produto);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "screen_cadastro";
     }
-    @PostMapping("/screen_cadastro")
-    public String salvarProduto(@RequestParam("descricao_completa") String descricao_completa,
-                                @RequestParam("estoque") int estoque,
-                                @RequestParam("custo_produto") float custo_produto,
-                                @RequestParam("preco_venda") float preco_venda) {
-        try {   
-            jdbcTemplate.update("INSERT INTO produto (descricao_completa, estoque, custo_produto, preco_venda) VALUES (?, ?, ?, ?)",
-                                descricao_completa, estoque, custo_produto, preco_venda);
+    
+    @PostMapping("/check-description")
+    @ResponseBody
+    public Map<String, Boolean> checkDescription(@RequestBody Map<String, String> requestBody) {
+        String descricao = requestBody.get("descricao");
+        boolean exists = isDescricaoCadastrada(descricao);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+            return response;
+}
+
+    private boolean isDescricaoCadastrada(String descricao) {
+        try {
+            List<Map<String, Object>> produtos = jdbcTemplate.queryForList("SELECT * FROM produto WHERE LOWER(descricao_completa) = LOWER(?)", descricao);
+            return !produtos.isEmpty();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return "redirect:/screen_cadastro";
+            return false;
     }
-    
-    
+}
+
+    @PostMapping("/screen_cadastro")
+    public String salvarProduto(@RequestParam("descricao_completa") String descricao_completa,
+                            @RequestParam("estoque") int estoque,
+                            @RequestParam("custo_produto") float custo_produto,
+                            @RequestParam("preco_venda") float preco_venda) {
+    try {
+        Integer ultimoId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM produto", Integer.class);
+        int novoId = (ultimoId != null) ? ultimoId + 1 : 1;
+
+        jdbcTemplate.update("INSERT INTO produto (id, descricao_completa, estoque, custo_produto, preco_venda) VALUES (?, ?, ?, ?, ?)",
+                            novoId, descricao_completa, estoque, custo_produto, preco_venda);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "redirect:/screen_cadastro";
+}
 
     @GetMapping("/screen_vendas")
     public String screen_vendas(Model model) {
         try {
             List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1"); // Busca com query do banco de dados postgresql
             model.addAttribute("loja", loja1);
-            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto"); // Busca com query do banco de dados postgresql
+            List<Map<String, Object>> produto = jdbcTemplate.queryForList("SELECT * FROM produto ORDER BY id ASC"); // Busca com query do banco de dados postgresql
             model.addAttribute("produtos", produto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,18 +113,37 @@ public class IndexController {
         return "screen_vendas";
     }
 
-    // Mapeamento para busca de produto
     @GetMapping("/search")
-    public String searchByName(@RequestParam("term") String term, Model model) {
+    public String searchByName(@RequestParam(value = "term", required = false) String term, Model model) {
         try {
-            List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1"); // Busca com query do banco de dados postgresql
+            if (term == null || term.isEmpty()) {
+                return "screen_estoque :: #productTable"; 
+            }
+            
+            int id = 0;
+            try {
+                id = Integer.parseInt(term);
+            } catch (NumberFormatException ex) {
+            }
+            
+            List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1");
             model.addAttribute("loja", loja1);
-            List<Map<String, Object>> produtos = jdbcTemplate.queryForList("SELECT * FROM produto WHERE descricao_completa LIKE ?", "%" + term + "%"); // Busca com query do banco de dados postgresql
-            model.addAttribute("produtos", produtos);
+            
+            List<Map<String, Object>> produtos;
+            if (id != 0) {
+                produtos = jdbcTemplate.queryForList("SELECT * FROM produto WHERE id = ?", id);
+            } else {
+                produtos = jdbcTemplate.queryForList("SELECT * FROM produto WHERE descricao_completa LIKE ? ORDER BY CASE WHEN descricao_completa ILIKE ? THEN 0 ELSE 1 END, descricao_completa", "%" + term + "%", term + "%");
+            }
+            
+            if (produtos.isEmpty()) {
+                model.addAttribute("mensagem", term);
+            } else {
+                model.addAttribute("produtos", produtos);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "screen_estoque :: #productTable"; // Retorna apenas a tabela de produtos atualizada
+        return "screen_estoque :: #productTable"; 
     }
-
-}
+}     
