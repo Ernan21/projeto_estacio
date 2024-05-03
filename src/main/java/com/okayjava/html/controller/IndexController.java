@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @Controller
 public class IndexController {
@@ -146,4 +149,21 @@ public class IndexController {
         }
         return "screen_estoque :: #productTable"; 
     }
+    // Método alterar um produto
+    @RequestMapping(value ="/alterar-produto", method=RequestMethod.PUT)
+    public @ResponseBody String alterarProduto(@RequestParam("descricao_completa") String descricao_completa,
+                                               @RequestParam("estoque") int estoque,
+                                               @RequestParam("custo_produto") float custo_produto,
+                                               @RequestParam("preco_venda") float preco_venda,
+                                               @RequestParam("id") int id) {
+        try {
+            jdbcTemplate.update("UPDATE produto SET descricao_completa=?, estoque=?, custo_produto=?, preco_venda=? WHERE id=?",
+                    descricao_completa, estoque, custo_produto, preco_venda, id);
+            return "Produto alterado com sucesso!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erro ao alterar o produto.";
+        }
+    } 
+
 }     

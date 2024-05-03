@@ -25,6 +25,7 @@
                 <th>Código</th>
                 <th>Descrição</th>
                 <th>Estoque</th>
+                <th>Ação</th> <!-- Adicionando a coluna para ação -->
             </tr>
             </thead>
             <tbody th:if="${not #lists.isEmpty(produtos)}" th:each="produto : ${produtos}">
@@ -32,6 +33,9 @@
                 <td th:text="${produto['id']}"></td>
                 <td class="descricao_completa" th:text="${produto['descricao_completa']}"></td>
                 <td class="estoque" th:text="${produto['estoque']}"></td>
+                <td>
+                    <button onclick="editarProduto('${produto['id']}')">Editar</button> <!-- Botão para editar -->
+                </td>
             </tr>
             </tbody>
         </table>
@@ -39,4 +43,12 @@
     <div id="messageArea"></div>
 </body>
 <script src="/javascript/search.js"></script>
+<script>
+    function editarProduto(id) {
+        // Implemente a lógica para editar o produto com o ID especificado
+        // Você pode usar JavaScript puro ou uma biblioteca/framework, dependendo da sua preferência
+        // Por exemplo, você pode redirecionar para uma página de edição com o ID do produto na URL
+        // Ou você pode abrir um modal para edição diretamente nesta página
+    }
+</script>
 </html>
