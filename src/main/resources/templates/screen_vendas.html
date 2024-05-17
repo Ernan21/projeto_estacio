@@ -1,18 +1,48 @@
 <!doctype html>
-<html lang="pt-br" data-bs-theme="light">
+<html lang="pt-br" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="img/main/icone.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="style.css" rel="stylesheet">
+    <link th:href="@{/css/vendas-style.css}" rel="stylesheet">
 </head>
 <title th:text="'VENDAS - ' + ${loja[0].nome}"></title>
 <body class="d-flex align-items-center justify-content-center py-4 bg-body-tertiary">
 <main class="w-100 m-auto">
     <h1 class="text-center mt-5">VENDAS</h1>
-    <p class="text-center text-danger display-6 mt-5">Esta área está em desenvolvimento.</p>
     <main class="w-100 m-auto form-container">
+        <div id="barraPesquisa">
+            <input type="search" id="busca" placeholder="Pesquisar">
+            <button id="btobusca">Pesquisar</button>
+        </div>
+        <div id = "tabela" style="overflow: scroll;">
+        <table>
+            <thead id="cabeça">
+                <tr>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Valor Unit.</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tr id="corpo">
+                <td>157</td>
+                <td>Mochila</td>
+                <td>2</td>
+                <td>200</td>
+                <td>400</td>
+                <td><button id="quantidade"><img id="imgbt" src="/img/main/54414.png"></button><button id="quantidade"><img id="imgbt" src="/img/main/43625.png"></button></td>
+            </tr>
+            
+        </table> 
+        </div>
+        <div id="total">
+            <h3>Subtotal(R$): Desconto(R$): <input type="number" id="desconto" placeholder="0,00"> Total(R$):</h3> 
+            
+        </div>
     </main>
 </main>
 </body>
