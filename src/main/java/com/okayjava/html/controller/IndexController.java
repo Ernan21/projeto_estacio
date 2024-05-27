@@ -53,6 +53,7 @@ public class IndexController {
     }
 
     // Mapeamento para tela de cadastro
+
     @GetMapping("/screen_cadastro")
     public String screen_cadastro(Model model) {
         try {
@@ -66,7 +67,7 @@ public class IndexController {
         return "screen_cadastro";
     }
     
-    // Verificação se para saber se o produto a ser cadastro já tem uma descrição parecida
+    // Verificação para saber se o produto a ser cadastro já tem uma descrição parecida
 
     @PostMapping("/check-description")
     @ResponseBody
