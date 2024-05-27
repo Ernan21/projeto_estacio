@@ -15,7 +15,7 @@ function search() {
             if (xhr.status === 200) {
                 document.getElementById("productTable").innerHTML = xhr.responseText;
                 var tableRows = document.getElementById("productTable").getElementsByTagName("tr");
-                if (tableRows.length === 1) { // Apenas o cabeçalho da tabela
+                if (tableRows.length === 1) {
                     document.getElementById("messageArea").innerText = "Nenhuma informação encontrada para o termo mencionado: \"" + searchTerm + "\"";
                     document.getElementById("messageArea").style.display = "block";
                 } else {

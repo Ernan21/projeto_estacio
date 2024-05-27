@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
@@ -24,6 +22,7 @@ public class IndexController {
     private JdbcTemplate jdbcTemplate;
 
     // Mapeamento para tela inicial
+
     @GetMapping("/")
     public String main_screen(Model model) {
         try {
@@ -39,6 +38,7 @@ public class IndexController {
     }
 
     // Mapeamento para tela de estoque
+
     @GetMapping("/screen_estoque")
     public String estoque_screen(Model model) {
         try {
@@ -66,6 +66,8 @@ public class IndexController {
         return "screen_cadastro";
     }
     
+    // Verificação se para saber se o produto a ser cadastro já tem um descrição parecida
+
     @PostMapping("/check-description")
     @ResponseBody
     public Map<String, Boolean> checkDescription(@RequestBody Map<String, String> requestBody) {
@@ -85,6 +87,7 @@ public class IndexController {
             return false;
     }
 }
+    // Tela de Cadastro
 
     @PostMapping("/screen_cadastro")
     public String salvarProduto(@RequestParam("descricao_completa") String descricao_completa,
@@ -149,21 +152,38 @@ public class IndexController {
         }
         return "screen_estoque :: #productTable"; 
     }
-    // Método alterar um produto
-    @RequestMapping(value ="/alterar-produto", method=RequestMethod.PUT)
-    public @ResponseBody String alterarProduto(@RequestParam("descricao_completa") String descricao_completa,
-                                               @RequestParam("estoque") int estoque,
-                                               @RequestParam("custo_produto") float custo_produto,
-                                               @RequestParam("preco_venda") float preco_venda,
-                                               @RequestParam("id") int id) {
-        try {
-            jdbcTemplate.update("UPDATE produto SET descricao_completa=?, estoque=?, custo_produto=?, preco_venda=? WHERE id=?",
-                    descricao_completa, estoque, custo_produto, preco_venda, id);
-            return "Produto alterado com sucesso!";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Erro ao alterar o produto.";
-        }
-    } 
 
-}     
+    // Tela de Edição do Produto (Pós Clicado no Botão Editar no Estoque)
+
+    @GetMapping("/screen_editar")
+    public String editarProduto(@RequestParam("id") int id,
+                            @RequestParam("descricao_completa") String descricao_completa, 
+                            @RequestParam("estoque") int estoque, 
+                            Model model) {
+    try {
+        model.addAttribute("id", id);
+        model.addAttribute("descricao_completa", descricao_completa);
+        model.addAttribute("estoque", estoque);
+        
+        List<Map<String, Object>> loja1 = jdbcTemplate.queryForList("SELECT * FROM lojas WHERE id=1");
+        model.addAttribute("loja", loja1);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "screen_editar";
+}
+
+
+@PostMapping("/update_product")
+public String atualizarProduto(@RequestParam("id") int id,
+                               @RequestParam("descricao_completa") String descricao_completa,
+                               @RequestParam("estoque") int estoque) {
+    try {
+        jdbcTemplate.update("UPDATE produto SET descricao_completa = ?, estoque = ? WHERE id = ?",
+                            descricao_completa, estoque, id);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "redirect:/screen_estoque";
+}
+}

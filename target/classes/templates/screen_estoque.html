@@ -12,6 +12,9 @@
 <body class="d-flex align-items-center py-5 bg-body-tertiary">
 <main class="w-100 m-auto">
     <header>
+        <div class="d-flex justify-content-end mb-3">
+            <a th:href="@{/}" class="btn bg-transparent me-5 text-decoration-none text-decoration-underline btn-lg">Voltar para o menu</a>
+        </div>
         <h1 style="text-align: center;">ESTOQUE</h1>
     </header>
     <div id="search">
@@ -19,7 +22,7 @@
         <button onclick="search()">Pesquisar</button>
     </div>
     <div class="container">
-        <table id="productTable">
+        <table id="productTable" class="table">
             <thead>
             <tr>
                 <th>Código</th>
@@ -33,21 +36,16 @@
                 <td th:text="${produto['id']}"></td>
                 <td class="descricao_completa" th:text="${produto['descricao_completa']}"></td>
                 <td class="estoque" th:text="${produto['estoque']}"></td>
-                <td><button onclick="editarProduto(${produto['id']})">Alterar</button></td>
+                <td>
+                    <a th:href="@{'/screen_editar?id=' + ${produto['id']} + '&descricao_completa=' + ${produto['descricao_completa']} + '&estoque=' + ${produto['estoque']}}" 
+                    class="btn btn-lg d-block icon-animation btn-secondary">Editar</a>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
     <div id="messageArea"></div>
-
-    
-</body>
+</main>
 <script src="/javascript/search.js"></script>
-<script>
-    function editarProduto(id) {
-        // Redirecionar para a página de edição com o ID do produto
-        window.location.href = '/screen_editar' + id;
-    }
-</script>
-
+</body>
 </html>
