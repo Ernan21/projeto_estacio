@@ -9,12 +9,12 @@ function submitForm() {
                 var response = JSON.parse(xhr.responseText);
                 if (response.exists) {
                     messageArea.innerText = "Produto já cadastrado!";
-                    messageArea.classList.remove("success"); // Remover a classe 'success'
-                    messageArea.classList.add("error"); // Adicionar a classe 'error'
+                    messageArea.classList.remove("success");
+                    messageArea.classList.add("error");
                 } else {
                     messageArea.innerText = "Produto cadastrado com sucesso!";
-                    messageArea.classList.remove("error"); // Remover a classe 'error'
-                    messageArea.classList.add("success"); // Adicionar a classe 'success'
+                    messageArea.classList.remove("error");
+                    messageArea.classList.add("success");
                     document.getElementById("cadastroForm").submit();
                 }
                 messageArea.style.display = "block";

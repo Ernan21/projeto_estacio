@@ -66,7 +66,7 @@ public class IndexController {
         return "screen_cadastro";
     }
     
-    // Verificação se para saber se o produto a ser cadastro já tem um descrição parecida
+    // Verificação se para saber se o produto a ser cadastro já tem uma descrição parecida
 
     @PostMapping("/check-description")
     @ResponseBody
@@ -118,6 +118,9 @@ public class IndexController {
         }
         return "screen_vendas";
     }
+
+
+    // Funcionalidades da Barra de Pesquisa na Maneira de Organizar os Dados
 
     @GetMapping("/search")
     public String searchByName(@RequestParam(value = "term", required = false) String term, Model model) {
@@ -173,6 +176,8 @@ public class IndexController {
     return "screen_editar";
 }
 
+
+// Ação após o produto editado
 
 @PostMapping("/update_product")
 public String atualizarProduto(@RequestParam("id") int id,
