@@ -1,49 +1,185 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="shortcut icon" href="img/main/icone.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link th:href="@{/css/vendas-style.css}" rel="stylesheet">
+    <title>VENDAS</title>
 </head>
-<title th:text="'VENDAS - ' + ${loja[0].nome}"></title>
-<body class="d-flex align-items-center justify-content-center py-4 bg-body-tertiary">
-<main class="w-100 m-auto">
-    <h1 class="text-center mt-5">VENDAS</h1>
-    <main class="w-100 m-auto form-container">
-        <div id="barraPesquisa">
-            <input type="search" id="busca" placeholder="Pesquisar">
-            <button id="btobusca">Pesquisar</button>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Vendas</h1>
+        <div style="margin-top: 20px;"></div>
+        <div class="row mt-3 mb-3 justify-content-center">
+            <div class="col-md-4 mb-3 pe-md-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="codigo" placeholder="Digite o código do produto">
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div id = "tabela" style="overflow: scroll;">
-        <table>
-            <thead id="cabeça">
-                <tr>
-                    <th>Código</th>
-                    <th>Produto</th>
-                    <th>Quantidade</th>
-                    <th>Valor Unit.</th>
-                    <th>Subtotal</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tr id="corpo">
-                <td>157</td>
-                <td>Mochila</td>
-                <td>2</td>
-                <td>200</td>
-                <td>400</td>
-                <td><button id="quantidade"><img id="imgbt" src="/img/main/54414.png"></button><button id="quantidade"><img id="imgbt" src="/img/main/43625.png"></button></td>
-            </tr>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="border text-center">Código</th>
+                        <th class="border text-center">Produto</th>
+                        <th class="border text-center">Quantidade (+/-)</th>
+                        <th class="border text-center">Valor Unitário (R$)</th>
+                        <th class="border text-center">Subtotal (Item)</th>
+                        <th class="border text-center">Botão (Excluir)</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo">
+                </tbody>                
+            </table>
+        </div>
+        <div class="row mt-5 mb-4">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Subtotal(R$)</h5>
+                        <p class="card-text h3" id="subtotal">0,00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Desconto(R$)</h5>
+                        <input type="number" class="form-control form-control-lg text-center" id="desconto" placeholder="0,00" onchange="atualizarTotal()">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Total(R$)</h5>
+                        <p class="card-text h3" id="totalValor">0,00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-6 text-center">
+                <button class="btn btn-success me-2" id="finalizarVenda" onclick="confirmarFinalizarVenda()">Finalizar Venda</button>
+                <button class="btn btn-danger" id="cancelarVenda" onclick="confirmarCancelarVenda()">Cancelar Venda</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Pesquisa de Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Valor de Venda</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="id">123</td>
+                                <td class="descricao_completa">Produto A</td>
+                                <td class="preco_venda">50.00</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="selecionarProduto('123', 'Produto A', 50.00)">Selecionar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="id">124</td>
+                                <td class="descricao_completa">Produto B</td>
+                                <td class="preco_venda">60.00</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="selecionarProduto('124', 'Produto B', 60.00)">Selecionar</button>
+                                </td>
+                            </tr>
+                        </tbody>                                         
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function atualizarTotal() {
+            let subtotal = 0;
+            const linhasTabela = document.querySelectorAll('#corpo tr');
+            linhasTabela.forEach((linha) => {
+                const quantidade = parseInt(linha.cells[2].querySelector('input').value);
+                const valorUnitario = parseFloat(linha.cells[3].textContent);
+                const subtotalItem = quantidade * valorUnitario;
+                linha.cells[4].textContent = subtotalItem.toFixed(2);
+                subtotal += subtotalItem;
+            });
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+            const desconto = parseFloat(document.getElementById('desconto').value || 0);
+            const total = subtotal - desconto;
+            document.getElementById('totalValor').textContent = total.toFixed(2);
+        }
+        function confirmarFinalizarVenda() {
+            if (confirm('Tem certeza que deseja finalizar a venda?')) {
+                window.location.href = "/";
+            }
+        }
+        function confirmarCancelarVenda() {
+            if (confirm('Tem certeza que deseja cancelar a venda?')) {
+                window.location.href = "/screen_vendas";
+            }
+        }
+        function incrementarQuantidade(button) {
+            const inputQuantidade = button.parentElement.querySelector('input[type="number"]');
+            inputQuantidade.value = parseInt(inputQuantidade.value) + 1;
+            atualizarTotal();
+        }
+
+        function decrementarQuantidade(button) {
+            const inputQuantidade = button.parentElement.querySelector('input[type="number"]');
+            if (parseInt(inputQuantidade.value) > 1) {
+                inputQuantidade.value = parseInt(inputQuantidade.value) - 1;
+            }
+            atualizarTotal();
+        }
+        function selecionarProduto(codigo, descricao, valor) {
+            const corpoTabela = document.getElementById('corpo');
+            const newRow = corpoTabela.insertRow();
+            const newCellCodigo = newRow.insertCell(0);
+            const newCellDescricao = newRow.insertCell(1);
+            const newCellQuantidade = newRow.insertCell(2);
+            const newCellValorUnitario = newRow.insertCell(3);
+            const newCellSubtotal = newRow.insertCell(4);
+            const newCellBotao = newRow.insertCell(5);
+
+            newCellCodigo.textContent = codigo;
+            newCellDescricao.textContent = descricao;
+            newCellQuantidade.innerHTML = '<input type="number" class="form-control" value="1" onchange="atualizarTotal()">';
+            newCellValorUnitario.textContent = valor.toFixed(2);
+            newCellSubtotal.textContent = valor.toFixed(2);
+            newCellBotao.innerHTML = '<button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button>';
+
+            atualizarTotal();
             
-        </table> 
-        </div>
-        <div id="total">
-            <h3>Subtotal(R$): Desconto(R$): <input type="number" id="desconto" placeholder="0,00"> Total(R$):</h3> 
-            
-        </div>
-    </main>
-</main>
+            const modalElement = document.getElementById('searchModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+        }
+        function removerProduto(button) {
+            const row = button.closest('tr');
+            row.remove();
+            atualizarTotal();
+        }
+    </script>
 </body>
 </html>
