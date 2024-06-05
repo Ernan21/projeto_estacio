@@ -16,7 +16,40 @@ function atualizarTotal() {
 
 function confirmarFinalizarVenda() {
     if (confirm('Tem certeza que deseja finalizar a venda?')) {
-        window.location.href = "/";
+        const linhasTabela = document.querySelectorAll('#corpo tr');
+        const idsProdutos = [];
+        const quantidades = [];
+        const valoresUnitarios = [];
+
+        linhasTabela.forEach((linha) => {
+            idsProdutos.push(linha.cells[0].textContent);
+            quantidades.push(linha.cells[2].querySelector('input').value);
+            valoresUnitarios.push(parseFloat(linha.cells[3].textContent));
+        });
+
+        const desconto = parseFloat(document.getElementById('desconto').value || 0);
+
+        fetch('/finalizar_venda', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'id_produtos': idsProdutos,
+                'quantidades': quantidades,
+                'valores_unitarios': valoresUnitarios,
+                'desconto': desconto
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Venda finalizada com sucesso!');
+                window.location.href = "/screen_vendas";
+            } else {
+                throw new Error('Erro ao finalizar a venda');
+            }
+        })
+        .catch(error => console.error('Erro ao finalizar a venda:', error));
     }
 }
 
