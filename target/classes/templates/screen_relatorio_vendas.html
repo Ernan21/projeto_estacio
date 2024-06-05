@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Relatório de Vendas</title>
+    <style>
+        table, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        table{
+            width: 100%;
+        }
+    </style>
+    </head>
+    <body><div id="brk_yuan"></div>
+        <h1>Relatório de Vendas</h1>
+        <form action="/search_relatorio_vendas" method="post">
+            <label for="data_inicio">Data Início:</label>
+            <input type="date" id="data_inicio" name="data_inicio" required="">
+            <br>
+            <label for="data_fim">Data Fim:</label>
+            <input type="date" id="data_fim" name="data_fim" required="">
+            <br>
+            <button type="submit">Buscar</button>
+        </form>
+    
+        <h2>Resultados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>numero cupom</th>
+                    <th>data venda</th>
+                    <th>cod produto</th>
+                    <th>quantidade vendida</th>
+                    <th>valor</th>
+                    <th>id_loja</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="venda : ${vendas}">
+                    <td></td>
+                    <td th:text="${venda.data_venda}"></td>
+                    <td th:text="${venda.id_produto}"></td>
+                    <td th:text="${venda.quantidade_vendida}"></td>
+                    <td th:text="${venda.valor_unitario}"></td>
+                    <td th:text="${venda.id_loja}"></td>
+                </tr>
+            </tbody>
+        </table>
+</body>
+</html>
