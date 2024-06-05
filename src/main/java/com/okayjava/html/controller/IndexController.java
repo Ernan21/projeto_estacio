@@ -1,6 +1,5 @@
 package com.okayjava.html.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +120,8 @@ public class IndexController {
         return "screen_vendas";
     }
 
+    // Funcionalidades da Barra de Pesquisa de Venda
+
     @GetMapping("/produtos")
     @ResponseBody
     public List<Map<String, Object>> getProdutos(
@@ -128,21 +129,19 @@ public class IndexController {
         @RequestParam(value = "descricao", required = false) String descricao
     ) {
         String query = "SELECT * FROM produto WHERE 1 = 1";
-    
+
         if (codigo != null && !codigo.isEmpty()) {
             query += " AND id = '" + codigo + "'";
         }
-    
+
         if (descricao != null && !descricao.isEmpty()) {
-            query += " AND descricao_completa LIKE '%" + descricao + "%'";
+            query += " AND LOWER(descricao_completa) LIKE LOWER('%" + descricao + "%') ORDER BY CASE WHEN LOWER(descricao_completa) LIKE LOWER('" + descricao + "%') THEN 0 ELSE 1 END, descricao_completa";
         }
-    
+
         return jdbcTemplate.queryForList(query);
     }
-
     
-
-    // Funcionalidades da Barra de Pesquisa na Maneira de Organizar os Dados
+    // Funcionalidades da Barra de Pesquisa do Estoque
 
     @GetMapping("/search")
     public String searchByName(@RequestParam(value = "term", required = false) String term, Model model) {

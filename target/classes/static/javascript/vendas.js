@@ -43,43 +43,45 @@ function decrementarQuantidade(button) {
 function selecionarProduto(id, descricao, valor) {
     const corpoTabela = document.getElementById('corpo');
     const newRow = corpoTabela.insertRow();
-newRow.innerHTML = `
-    <td>${id}</td>
-    <td>${descricao}</td>
-    <td><input type="number" class="form-control" value="1" onchange="atualizarTotal()"></td>
-    <td>${valor.toFixed(2)}</td>
-    <td>${valor.toFixed(2)}</td>
-    <td><button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button></td>
-`;
-atualizarTotal();
+    newRow.innerHTML = `
+        <td>${id}</td>
+        <td>${descricao}</td>
+        <td><input type="number" class="form-control" value="1" onchange="atualizarTotal()"></td>
+        <td>${valor.toFixed(2)}</td>
+        <td>${valor.toFixed(2)}</td>
+        <td><button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button></td>
+    `;
+    atualizarTotal();
 
-const modalElement = document.getElementById('searchModal');
-const modalInstance = bootstrap.Modal.getInstance(modalElement);
-modalInstance.hide();
+    const modalElement = document.getElementById('searchModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    modalInstance.hide();
+    document.getElementById('searchTerm').value = '';
 }
 
+
 function removerProduto(button) {
-const row = button.closest('tr');
-row.remove();
-atualizarTotal();
+    const row = button.closest('tr');
+    row.remove();
+    atualizarTotal();
 }
 
 function verificarEnter(event) {
-if (event.key === 'Enter') {
-    buscarProdutoPorCodigo();
+    if (event.key === 'Enter') {
+        buscarProdutoPorCodigo();
 }
 }
 
 function buscarProdutoPorCodigo() {
-const codigoInput = document.getElementById('codigo');
-const codigo = codigoInput.value.trim();
-if (codigo) {
-    fetch(`/produtos?codigo=${codigo}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                const produto = data[0];
-                selecionarProduto(produto.id, produto.descricao_completa, produto.preco_venda);
+    const codigoInput = document.getElementById('codigo');
+    const codigo = codigoInput.value.trim();
+    if (codigo) {
+        fetch(`/produtos?codigo=${codigo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const produto = data[0];
+                    selecionarProduto(produto.id, produto.descricao_completa, produto.preco_venda);
             } else {
                 alert('Produto não encontrado');
             }
@@ -94,39 +96,46 @@ if (codigo) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-const searchModal = document.getElementById('searchModal');
-searchModal.addEventListener('shown.bs.modal', function() {
-    carregarProdutos();
-});
+    const searchModal = document.getElementById('searchModal');
+    searchModal.addEventListener('shown.bs.modal', function() {
+        const searchTermInput = document.getElementById('searchTerm');
+        const term = searchTermInput.value.trim();
+        if (term !== '') {
+            carregarProdutos(term);
+        } else {
+            const produtoTableBody = document.getElementById('produtoTableBody');
+            produtoTableBody.innerHTML = '';
+        }
+    });
 
-const searchTermInput = document.getElementById('searchTerm');
-searchTermInput.addEventListener('input', function() {
-    carregarProdutos(this.value);
-});
+    const searchTermInput = document.getElementById('searchTerm');
+    searchTermInput.addEventListener('input', function() {
+        const term = this.value.trim();
+        if (term !== '') {
+            carregarProdutos(term);
+        } else {
+            const produtoTableBody = document.getElementById('produtoTableBody');
+            produtoTableBody.innerHTML = '';
+        }
+    });
 });
 
 function carregarProdutos(term = '') {
-const produtoTableBody = document.getElementById('produtoTableBody');
-
-if (term.trim() === '') {
-    produtoTableBody.innerHTML = '';
-    return;
-}
-
-fetch(`/produtos?term=${term}`)
-    .then(response => response.json())
-    .then(data => {
-        produtoTableBody.innerHTML = '';
-        data.forEach(produto => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${produto.id}</td>
-                <td>${produto.descricao_completa}</td>
-                <td>${produto.preco_venda.toFixed(2)}</td>
-                <td><button class="btn btn-primary" onclick="selecionarProduto(${produto.id}, '${produto.descricao_completa}', ${produto.preco_venda})">Selecionar</button></td>
-            `;
-            produtoTableBody.appendChild(row);
-        });
-    })
-    .catch(error => console.error('Erro ao carregar produtos:', error));
+    const produtoTableBody = document.getElementById('produtoTableBody');
+    fetch(`/produtos?descricao=${term}`)
+        .then(response => response.json())
+        .then(data => {
+            produtoTableBody.innerHTML = '';
+            data.forEach(produto => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${produto.id}</td>
+                    <td>${produto.descricao_completa}</td>
+                    <td>${produto.preco_venda.toFixed(2)}</td>
+                    <td><button class="btn btn-primary" onclick="selecionarProduto(${produto.id}, '${produto.descricao_completa}', ${produto.preco_venda})">Selecionar</button></td>
+                `;
+                produtoTableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar produtos:', error));
 }
