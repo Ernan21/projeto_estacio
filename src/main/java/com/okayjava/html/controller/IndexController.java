@@ -1,7 +1,7 @@
 package com.okayjava.html.controller;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -232,11 +232,21 @@ public String searchRelatorioVendas(
         Date dataFimSql = Date.valueOf(dataFim);
 
         String query = "SELECT * FROM vendas WHERE data_venda BETWEEN ? AND ?";
+        
         List<Map<String, Object>> vendas = jdbcTemplate.queryForList(query, dataInicioSql, dataFimSql);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        for (Map<String, Object> venda : vendas) {
+            Date dataVenda = (Date) venda.get("data_venda");
+            String dataVendaFormatada = sdf.format(dataVenda);
+            venda.put("data_venda", dataVendaFormatada);
+        }
+
         model.addAttribute("vendas", vendas);
+
     } catch (Exception e) {
         e.printStackTrace();
     }
     return "screen_relatorio_vendas";
-}
+    }
 }
