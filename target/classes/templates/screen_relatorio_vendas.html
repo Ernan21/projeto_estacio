@@ -35,37 +35,21 @@
                 <th scope="col">Código do Produto</th>
                 <th scope="col">Quantidade</th>
                 <th scope="col">Valor Unitário</th>
-                <th scope="col">Desconto</th>
                 <th scope="col">Subtotal</th>
             </tr>
             </thead>
-            <tbody id="tabela-vendas">
-            <tr th:each="venda : ${vendas}">
-                <td th:text="${venda.id_venda}"></td>
-                <td th:text="${venda.data_venda}"></td>
-                <td th:text="${venda.id_produto}"></td>
-                <td th:text="${venda.quantidade_vendida}"></td>
-                <td th:text="${venda.valor_unitario}"></td>
-                <td th:text="${venda.desconto}"></td>
+            <tbody>
+            <tr th:each="vendas : ${vendas}">
+                <td th:text="${vendas.id_venda}"></td>
+                <td th:text="${vendas.data_venda}"></td>
+                <td th:text="${vendas.id_produto}"></td>
+                <td th:text="${vendas.quantidade_vendida}"></td>
+                <td th:text="${vendas.valor_unitario}"></td>
                 <td></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <style>
-        .font-size-lg {
-            font-size: 24px;
-        }
-    </style>
-    <div class="container text-center mt-4">
-        <div class="rounded border p-2 font-size-lg d-inline-block">
-            <p><strong>Total de Descontos:</strong> <span id="total-descontos"></span></p>
-        </div>
-        <div class="mt-3 rounded border p-2 font-size-lg d-inline-block">
-            <p><strong>Total Geral:</strong> <span id="total-geral"></span></p>
-        </div>
-    </div>
 </div>
-    <script src="/javascript/relatorio-vendas.js"></script>
 </body>
 </html>
