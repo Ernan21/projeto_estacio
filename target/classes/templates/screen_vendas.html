@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="shortcut icon" href="img/main/icone.ico" type="image/x-icon">
-    <title>VENDAS</title>
+    <title th:text="'VENDA - ' + ${loja[0].nome}"></title>
 </head>
 <body>
     <div class="container">
@@ -16,7 +16,7 @@
         <div class="row mt-3 mb-3 justify-content-center">
             <div class="col-md-4 mb-3 pe-md-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="codigo" placeholder="Digite o código do produto">
+                    <input type="text" class="form-control" id="codigo" placeholder="Digite o código do produto" onkeypress="verificarEnter(event)">
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#searchModal">
                         <i class="bi bi-search"></i>
                     </button>
@@ -73,14 +73,19 @@
         </div>
     </div>
     <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog d-flex justify-content-center">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="searchModalLabel">Pesquisa de Produto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" id="searchTerm" placeholder="Pesquisar por descrição">
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-condensed">
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -89,97 +94,14 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="id">123</td>
-                                <td class="descricao_completa">Produto A</td>
-                                <td class="preco_venda">50.00</td>
-                                <td>
-                                    <button class="btn btn-primary" onclick="selecionarProduto('123', 'Produto A', 50.00)">Selecionar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="id">124</td>
-                                <td class="descricao_completa">Produto B</td>
-                                <td class="preco_venda">60.00</td>
-                                <td>
-                                    <button class="btn btn-primary" onclick="selecionarProduto('124', 'Produto B', 60.00)">Selecionar</button>
-                                </td>
-                            </tr>
-                        </tbody>                                         
+                        <tbody id="produtoTableBody">
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        function atualizarTotal() {
-            let subtotal = 0;
-            const linhasTabela = document.querySelectorAll('#corpo tr');
-            linhasTabela.forEach((linha) => {
-                const quantidade = parseInt(linha.cells[2].querySelector('input').value);
-                const valorUnitario = parseFloat(linha.cells[3].textContent);
-                const subtotalItem = quantidade * valorUnitario;
-                linha.cells[4].textContent = subtotalItem.toFixed(2);
-                subtotal += subtotalItem;
-            });
-            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
-            const desconto = parseFloat(document.getElementById('desconto').value || 0);
-            const total = subtotal - desconto;
-            document.getElementById('totalValor').textContent = total.toFixed(2);
-        }
-        function confirmarFinalizarVenda() {
-            if (confirm('Tem certeza que deseja finalizar a venda?')) {
-                window.location.href = "/";
-            }
-        }
-        function confirmarCancelarVenda() {
-            if (confirm('Tem certeza que deseja cancelar a venda?')) {
-                window.location.href = "/screen_vendas";
-            }
-        }
-        function incrementarQuantidade(button) {
-            const inputQuantidade = button.parentElement.querySelector('input[type="number"]');
-            inputQuantidade.value = parseInt(inputQuantidade.value) + 1;
-            atualizarTotal();
-        }
-
-        function decrementarQuantidade(button) {
-            const inputQuantidade = button.parentElement.querySelector('input[type="number"]');
-            if (parseInt(inputQuantidade.value) > 1) {
-                inputQuantidade.value = parseInt(inputQuantidade.value) - 1;
-            }
-            atualizarTotal();
-        }
-        function selecionarProduto(codigo, descricao, valor) {
-            const corpoTabela = document.getElementById('corpo');
-            const newRow = corpoTabela.insertRow();
-            const newCellCodigo = newRow.insertCell(0);
-            const newCellDescricao = newRow.insertCell(1);
-            const newCellQuantidade = newRow.insertCell(2);
-            const newCellValorUnitario = newRow.insertCell(3);
-            const newCellSubtotal = newRow.insertCell(4);
-            const newCellBotao = newRow.insertCell(5);
-
-            newCellCodigo.textContent = codigo;
-            newCellDescricao.textContent = descricao;
-            newCellQuantidade.innerHTML = '<input type="number" class="form-control" value="1" onchange="atualizarTotal()">';
-            newCellValorUnitario.textContent = valor.toFixed(2);
-            newCellSubtotal.textContent = valor.toFixed(2);
-            newCellBotao.innerHTML = '<button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button>';
-
-            atualizarTotal();
-            
-            const modalElement = document.getElementById('searchModal');
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            modalInstance.hide();
-        }
-        function removerProduto(button) {
-            const row = button.closest('tr');
-            row.remove();
-            atualizarTotal();
-        }
-    </script>
+    <script src="/javascript/vendas.js"></script>
 </body>
 </html>
+
