@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-br" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -8,9 +7,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="shortcut icon" href="img/main/icone.ico" type="image/x-icon">
     <title th:text="'VENDA - ' + ${loja[0].nome}"></title>
-</head>
+</head> 
 <body>
     <div class="container">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <a th:href="@{/}" class="btn bg-transparent text-decoration-none text-decoration-underline btn-lg">Voltar para o menu</a>
+            </div>
+        </div>
         <h1 class="text-center mt-5">Vendas</h1>
         <div style="margin-top: 20px;"></div>
         <div class="row mt-3 mb-3 justify-content-center">

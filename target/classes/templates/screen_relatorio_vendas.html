@@ -1,52 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>Relatório de Vendas</title>
-    <style>
-        table, tr, th, td{
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        table{
-            width: 100%;
-        }
-    </style>
-    </head>
-    <body><div id="brk_yuan"></div>
-        <h1>Relatório de Vendas</h1>
-        <form action="/search_relatorio_vendas" method="post">
-            <label for="data_inicio">Data Início:</label>
-            <input type="date" id="data_inicio" name="data_inicio" required="">
-            <br>
-            <label for="data_fim">Data Fim:</label>
-            <input type="date" id="data_fim" name="data_fim" required="">
-            <br>
-            <button type="submit">Buscar</button>
-        </form>
-    
-        <h2>Resultados</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>numero cupom</th>
-                    <th>data venda</th>
-                    <th>cod produto</th>
-                    <th>quantidade vendida</th>
-                    <th>valor</th>
-                    <th>id_loja</th>
-                </tr>
+<html lang="pt-br" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATÓRIO DE VENDAS</title>
+    <link rel="shortcut icon" href="img/main/icone.ico" type="image/x-icon">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="col-auto mt-4 ml-2 text-right">
+        <a th:href="@{/}" class="btn bg-transparent text-decoration-none text-decoration-underline btn-lg">Voltar para o menu</a>
+    </div>
+<div class="container">
+    <h1 class="text-center mt-5 mb-5">RELATÓRIO DE VENDAS</h1>
+    <form class="form-inline justify-content-center mb-4" action="/search_relatorio_vendas" method="post">
+        <div class="form-group mr-2">
+            <label for="data_inicio" class="mr-2">Data Início:</label>
+            <input type="date" id="data_inicio" name="data_inicio" class="form-control" required="">
+        </div>
+        <div class="form-group mr-2">
+            <label for="data_fim" class="mr-2">Data Fim:</label>
+            <input type="date" id="data_fim" name="data_fim" class="form-control" required="">
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    <h2 class="text-center mb-4">Resultados:</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nº do Cupom</th>
+                <th scope="col">Data da Venda</th>
+                <th scope="col">Código do Produto</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Valor Unitário</th>
+                <th scope="col">Subtotal</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:each="venda : ${vendas}">
-                    <td></td>
-                    <td th:text="${venda.data_venda}"></td>
-                    <td th:text="${venda.id_produto}"></td>
-                    <td th:text="${venda.quantidade_vendida}"></td>
-                    <td th:text="${venda.valor_unitario}"></td>
-                    <td th:text="${venda.id_loja}"></td>
-                </tr>
+            <tr th:each="vendas : ${vendas}">
+                <td th:text="${vendas.id_venda}"></td>
+                <td th:text="${vendas.data_venda}"></td>
+                <td th:text="${vendas.id_produto}"></td>
+                <td th:text="${vendas.quantidade_vendida}"></td>
+                <td th:text="${vendas.valor_unitario}"></td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
+    </div>
+</div>
 </body>
 </html>
