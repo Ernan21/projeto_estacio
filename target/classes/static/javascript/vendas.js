@@ -109,14 +109,14 @@ function carregarProdutos(term = '') {
 const produtoTableBody = document.getElementById('produtoTableBody');
 
 if (term.trim() === '') {
-    produtoTableBody.innerHTML = ''; // Limpar a tabela de produtos
+    produtoTableBody.innerHTML = '';
     return;
 }
 
 fetch(`/produtos?term=${term}`)
     .then(response => response.json())
     .then(data => {
-        produtoTableBody.innerHTML = ''; // Limpar a tabela de produtos antes de adicionar novos
+        produtoTableBody.innerHTML = '';
         data.forEach(produto => {
             const row = document.createElement('tr');
             row.innerHTML = `
