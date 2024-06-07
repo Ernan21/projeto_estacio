@@ -32,7 +32,7 @@
             <tr>
                 <th scope="col">Nº do Cupom</th>
                 <th scope="col">Data da Venda</th>
-                <th scope="col">Código do Produto</th>
+                <th scope="col">Produto</th>
                 <th scope="col">Quantidade</th>
                 <th scope="col">Valor Unitário</th>
                 <th scope="col">Desconto</th>
@@ -43,7 +43,7 @@
             <tr th:each="venda : ${vendas}">
                 <td th:text="${venda.id_venda}"></td>
                 <td th:text="${venda.data_venda}"></td>
-                <td th:text="${venda.id_produto}"></td>
+                <td th:text="${venda.descricao_completa}"></td>
                 <td th:text="${venda.quantidade_vendida}"></td>
                 <td th:text="${venda.valor_unitario}"></td>
                 <td th:text="${venda.desconto}"></td>

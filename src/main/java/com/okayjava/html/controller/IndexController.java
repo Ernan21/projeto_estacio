@@ -253,7 +253,7 @@ public String searchRelatorioVendas(
         Date dataInicioSql = Date.valueOf(dataInicio);
         Date dataFimSql = Date.valueOf(dataFim);
 
-        String query = "SELECT * FROM vendas WHERE data_venda BETWEEN ? AND ?";
+        String query = "SELECT * FROM VendasResumo WHERE data_venda BETWEEN ? AND ?";
         
         List<Map<String, Object>> vendas = jdbcTemplate.queryForList(query, dataInicioSql, dataFimSql);
 
