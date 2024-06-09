@@ -14,10 +14,42 @@ function atualizarTotal() {
     document.getElementById('totalValor').textContent = total.toFixed(2);
 }
 
-
 function confirmarFinalizarVenda() {
+    const linhasTabela = document.querySelectorAll('#corpo tr');
+    let hasInvalidQuantities = false;
+
+    linhasTabela.forEach((linha) => {
+        const quantidade = linha.cells[2].querySelector('input').value.trim();
+        if (!/^\d+$/.test(quantidade) || parseInt(quantidade) <= 0) {
+            alert('Por favor, insira uma quantidade que não seja zero e seja um valor inteiro positivo.');
+            hasInvalidQuantities = true;
+            return;
+        }
+    });
+
+    if (hasInvalidQuantities) {
+        return;
+    }
+
+    const desconto = parseFloat(document.getElementById('desconto').value || 0);
+    if (desconto < 0 || desconto !== desconto) {
+        alert('Por favor, insira um desconto válido.');
+        return;
+    }
+
+    let subtotal = 0;
+    linhasTabela.forEach((linha) => {
+        const valorUnitario = parseFloat(linha.cells[3].textContent);
+        const quantidade = parseInt(linha.cells[2].querySelector('input').value);
+        subtotal += valorUnitario * quantidade;
+    });
+
+    if (desconto > subtotal) {
+        alert('O desconto não pode ser maior que o total dos produtos.');
+        return;
+    }
+
     if (confirm('Tem certeza que deseja finalizar a venda?')) {
-        const linhasTabela = document.querySelectorAll('#corpo tr');
         const idsProdutos = [];
         const quantidades = [];
         const valoresUnitarios = [];
@@ -27,8 +59,6 @@ function confirmarFinalizarVenda() {
             quantidades.push(linha.cells[2].querySelector('input').value);
             valoresUnitarios.push(parseFloat(linha.cells[3].textContent));
         });
-
-        const desconto = parseFloat(document.getElementById('desconto').value || 0);
 
         fetch('/finalizar_venda', {
             method: 'POST',
