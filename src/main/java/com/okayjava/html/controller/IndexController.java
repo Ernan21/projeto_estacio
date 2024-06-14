@@ -142,23 +142,27 @@ public class IndexController {
         return jdbcTemplate.queryForList(query);
     }
 
-     @PostMapping("/finalizar_venda")
+    // Tela de Vendas - Finalizando uma Venda
+
+    @PostMapping("/finalizar_venda")
     public String finalizarVenda(@RequestParam("id_produtos") String[] idsProdutos,
                                  @RequestParam("quantidades") int[] quantidades,
                                  @RequestParam("valores_unitarios") float[] valoresUnitarios,
                                  @RequestParam("desconto") float desconto) {
         try {
-            // Gere um novo id_venda (substitua por sua lógica real de geração de ID)
             Integer ultimoIdVenda = jdbcTemplate.queryForObject("SELECT MAX(id_venda) FROM vendas", Integer.class);
             int novoIdVenda = (ultimoIdVenda != null) ? ultimoIdVenda + 1 : 1;
     
-            // Calcular o desconto por produto
             float descontoPorProduto = desconto / idsProdutos.length;
     
-            // Inserir os dados da venda na tabela de vendas
             for (int i = 0; i < idsProdutos.length; i++) {
+                int idProduto = Integer.parseInt(idsProdutos[i]);
+                int quantidadeVendida = quantidades[i];
+    
                 jdbcTemplate.update("INSERT INTO vendas (id_venda, id_produto, quantidade_vendida, valor_unitario, desconto, data_venda) VALUES (?, ?, ?, ?, ?, CURRENT_DATE)",
-                                    novoIdVenda, Integer.parseInt(idsProdutos[i]), quantidades[i], valoresUnitarios[i], descontoPorProduto);
+                                    novoIdVenda, idProduto, quantidadeVendida, valoresUnitarios[i], descontoPorProduto);
+    
+                jdbcTemplate.update("UPDATE produto SET estoque = estoque - ? WHERE id = ?", quantidadeVendida, idProduto);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,7 +170,7 @@ public class IndexController {
         return "redirect:/screen_vendas";
     }    
     
-    // Funcionalidades da Barra de Pesquisa na Maneira de Organizar os Dados
+    // Estoque - Funcionalidades da Barra de Pesquisa na Maneira de Organizar os Dados
 
     @GetMapping("/search")
     public String searchByName(@RequestParam(value = "term", required = false) String term, Model model) {
@@ -223,7 +227,7 @@ public class IndexController {
 }
 
 
-// Ação após o produto editado
+// Tela de Edição - Ação após o produto editado
 
 @PostMapping("/update_product")
 public String atualizarProduto(@RequestParam("id") int id,
@@ -238,7 +242,8 @@ public String atualizarProduto(@RequestParam("id") int id,
     return "redirect:/screen_estoque";
 }
 
-// tela com o relatorio de vendas
+// Tela com o relatorio de vendas
+
 @GetMapping("/screen_relatorio_vendas")
 public String relatorioVendasScreen(Model model) {
     return "screen_relatorio_vendas";
