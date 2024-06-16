@@ -103,10 +103,17 @@ function decrementarQuantidade(button) {
     }
     atualizarTotal();
 }
+const produtosAdicionados = new Set();
 
 function selecionarProduto(id, descricao, valor) {
+    if (produtosAdicionados.has(id)) {
+        alert('Este produto já foi adicionado.');
+        return;
+    }
+    
     const corpoTabela = document.getElementById('corpo');
     const newRow = corpoTabela.insertRow();
+    newRow.setAttribute('data-id', id);
     newRow.innerHTML = `
         <td>${id}</td>
         <td>${descricao}</td>
@@ -116,19 +123,21 @@ function selecionarProduto(id, descricao, valor) {
         <td><button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button></td>
     `;
     atualizarTotal();
-
+    produtosAdicionados.add(id);
     const modalElement = document.getElementById('searchModal');
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     modalInstance.hide();
     document.getElementById('searchTerm').value = '';
 }
 
-
 function removerProduto(button) {
     const row = button.closest('tr');
+    const id = row.getAttribute('data-id');
+    produtosAdicionados.delete(id);
     row.remove();
     atualizarTotal();
 }
+
 
 function verificarEnter(event) {
     if (event.key === 'Enter') {

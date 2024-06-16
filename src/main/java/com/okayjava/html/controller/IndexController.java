@@ -136,7 +136,8 @@ public class IndexController {
         }
     
         if (descricao != null && !descricao.isEmpty()) {
-            query += " AND descricao_completa LIKE '%" + descricao + "%'";
+            query += " AND descricao_completa ILIKE '" + descricao.replace("'", "''") + "%'";
+            query += " ORDER BY descricao_completa";
         }
     
         return jdbcTemplate.queryForList(query);
