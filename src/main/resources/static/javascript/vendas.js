@@ -103,6 +103,7 @@ function decrementarQuantidade(button) {
     }
     atualizarTotal();
 }
+
 const produtosAdicionados = new Set();
 
 function selecionarProduto(id, descricao, valor) {
@@ -110,7 +111,7 @@ function selecionarProduto(id, descricao, valor) {
         alert('Este produto já foi adicionado.');
         return;
     }
-    
+
     const corpoTabela = document.getElementById('corpo');
     const newRow = corpoTabela.insertRow();
     newRow.setAttribute('data-id', id);
@@ -120,29 +121,28 @@ function selecionarProduto(id, descricao, valor) {
         <td><input type="number" class="form-control" value="1" onchange="atualizarTotal()"></td>
         <td>${valor.toFixed(2)}</td>
         <td>${valor.toFixed(2)}</td>
-        <td><button class="btn btn-danger" onclick="removerProduto(this)">Excluir</button></td>
+        <td><button class="btn btn-danger" onclick="removerProduto(this, ${id})">Excluir</button></td>
     `;
     atualizarTotal();
     produtosAdicionados.add(id);
+
     const modalElement = document.getElementById('searchModal');
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     modalInstance.hide();
     document.getElementById('searchTerm').value = '';
 }
 
-function removerProduto(button) {
+function removerProduto(button, id) {
     const row = button.closest('tr');
-    const id = row.getAttribute('data-id');
     produtosAdicionados.delete(id);
     row.remove();
     atualizarTotal();
 }
 
-
 function verificarEnter(event) {
     if (event.key === 'Enter') {
         buscarProdutoPorCodigo();
-}
+    }
 }
 
 function buscarProdutoPorCodigo() {
@@ -155,17 +155,17 @@ function buscarProdutoPorCodigo() {
                 if (data.length > 0) {
                     const produto = data[0];
                     selecionarProduto(produto.id, produto.descricao_completa, produto.preco_venda);
-            } else {
-                alert('Produto não encontrado');
-            }
-        })
-        .catch(error => console.error('Erro ao buscar produto por código:', error))
-        .finally(() => {
-            codigoInput.value = '';
-        });
-} else {
-    alert('Por favor, digite um código de produto.');
-}
+                } else {
+                    alert('Produto não encontrado');
+                }
+            })
+            .catch(error => console.error('Erro ao buscar produto por código:', error))
+            .finally(() => {
+                codigoInput.value = '';
+            });
+    } else {
+        alert('Por favor, digite um código de produto.');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
